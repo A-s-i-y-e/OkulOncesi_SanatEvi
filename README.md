@@ -11,6 +11,13 @@ Bu proje, çocukların el hareketleri ve vücut takibi ile dijital sanat yapmala
 -   **🍎 Elma Yakala (Tüm Vücut):** Pose tracking teknolojisi ile vücut hareketleriyle oynanan interaktif oyun.
 -   **📸 Kayıt Özelliği:** Yapılan sanat eserlerini anında `saved_drawings` klasörüne kaydetme.
 
+## 📁 Proje Dokümantasyonu (Yazılım Mühendisliği)
+
+Bu proje, akademik standartlara uygun olarak dökümante edilmiştir:
+-   [📄 Yazılım Gereksinim Belirtimi (SRS)](docs/SRS.md)
+-   [🏗️ Yazılım Tasarım Belgesi (SDD)](docs/SDD.md)
+-   [🧪 Test Planı ve Raporu](docs/TEST_PLAN.md)
+
 ## 🚀 Kurulum ve Çalıştırma
 
 1.  **Gereksinimleri Yükleyin:**
