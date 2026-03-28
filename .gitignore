@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv
+venv/
+ENV/
+
+# Project Specific
+saved_drawings/
+pose_landmarker.task
+*.png
+*.jpg
+temp/
+test_run.py
