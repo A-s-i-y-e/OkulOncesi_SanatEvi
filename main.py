@@ -34,7 +34,8 @@ from ui import DrawingUI
 from gesture_icons import draw_active_gesture_display
 from menu import MainMenu
 from game import BalloonGame
-from ui_engine import PointerParticleSystem
+from ui_engine import PointerParticleSystem, draw_neon_text
+from face_detector import FaceDetector
 
 
 # -----------------------------------------------------------------------
@@ -98,6 +99,7 @@ def main():
     menu     = MainMenu(w, h)
     game     = None 
     magic_vfx = PointerParticleSystem(max_particles=150)
+    face_detector = FaceDetector()  # Yüz tanıma modülü
 
     # Durum değişkenleri (Çizim Modu)
     msg_text   = ""
@@ -130,6 +132,14 @@ def main():
         # Aynalama (daha doğal hissettirmek için)
         frame = cv2.flip(frame, 1)  # Ayna görüntüsü
         frame = cv2.resize(frame, (w, h)) # Kameradan ne gelirse gelsin UI için 1280x720 yap
+
+        # --- Yüz Tanıma ve Karşılama (Face Login Simulation) ---
+        if face_detector.is_face_present(frame):
+            # Ekranın en üstünde neon karşılama mesajı
+            welcome_msg = "HOS GELDIN KUCUK RESSAM! "
+            draw_neon_text(frame, welcome_msg, 450, 40, cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 100, 255), 2)
+            # Küçük bir yıldız ikonu ekleyelim
+            cv2.putText(frame, " ", (810, 40), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 2)
 
         # --- El Algılama / Pose Algılama ---
         if current_state == 'pose_game':

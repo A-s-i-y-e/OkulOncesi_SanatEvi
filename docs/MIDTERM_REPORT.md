@@ -82,6 +82,10 @@ Ekranda beliren hazır şablonların (Ayı, Araba vb.) üzerine gelindiğinde, u
 ![Gerçek Balon Patlatma Aksiyonu](images/gercek_balon_aksiyon.png)
 ![Gerçek Elma Yakalama (Pose Game) Aksiyonu](images/gercek_pose_aksiyon.png)
 
+#### 4.1.4. Özellik: AI Yüz Tanıma ve Karşılama (Giriş Simülasyonu)
+Uygulama, kamera karşısına geçen çocuğu otomatik olarak algılar ve ekranın üst kısmında neon efektli kişiselleştirilmiş bir karşılama mesajı gösterir. Bu özellik, çocukların teknolojiyle olan bağını güçlendirir.
+![Yüz Tanıma Karşılama Arayüzü](images/gercek_face_greeting.png)
+
 ---
 
 ## 5. Kod Kalitesi ve Yazılım Geliştirme Pratikleri
