@@ -32,6 +32,8 @@ from hand_detector import HandDetector
 from canvas import DrawingCanvas
 from ui import DrawingUI
 from gesture_icons import draw_active_gesture_display
+from menu import MainMenu
+from game import BalloonGame
 from ui_engine import PointerParticleSystem, draw_neon_text, draw_login_screen
 from face_detector import FaceDetector
 from emotion_game import EmotionGame
@@ -244,7 +246,7 @@ def main():
                 # Yüz verilerini al ve oyuna aktar
                 face_data = face_detector.get_face_data(frame)
                 emotion_game_inst.update(face_data)
-                frame = emotion_game_inst.draw(frame)
+                frame = emotion_game_inst.draw(frame, face_data)
                 
             # Geri donus butonu kontrolü
             for tip in index_tips:
