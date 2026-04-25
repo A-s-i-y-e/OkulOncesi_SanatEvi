@@ -63,7 +63,7 @@ Uygulama, **Modüler Katmanlı Mimari** kullanılarak geliştirilmiştir. Ayrıc
 ### 4.1. Temel Özellikler ve Kullanıcı Senaryoları
 
 **Tipik Kullanıcı Senaryosu:**
-1. **Giriş:** Uygulama "Sihirli Giriş Ekranı" ile açılır. Çocuk kameraya bakar; AI yüzünü tanıdığında ekranda parlayan bir "BAŞLA" butonu belirir. Çocuk elini butona doğru uzatarak ana menüye giriş yapar.
+1. **Giriş:** Uygulama "Sihirli Giriş Ekranı" ile açılır. Çocuk kameraya bakar; AI yüz ifadelerini (göz kırpma, ağız açma) anlık olarak taklit eden bir emoji ile çocuğu karşılar. Çocuk gülümsediğinde "Mutluluk Halkası" dolmaya başlar ve %100'e ulaştığında ana menüye giriş yapılır.
 2. **Menü:** Ana menüde elini gezdirerek neon efektli butonları keşfeder ve bir mod seçer.
 3. **Aksiyon:** Havada "İşaret Parmağı" (☝️) jestiyle tuval üzerine bir güneş çizer.
 4. **Etkileşim:** Yanlış çizdiği bir yeri "Zafer İşareti" (✌️) yaparak siler.
@@ -83,9 +83,11 @@ Ekranda beliren hazır şablonların (Ayı, Araba vb.) üzerine gelindiğinde, u
 ![Gerçek Balon Patlatma Aksiyonu](images/gercek_balon_aksiyon.png)
 ![Gerçek Elma Yakalama (Pose Game) Aksiyonu](images/gercek_pose_aksiyon.png)
 
-#### 4.1.4. Özellik: AI Yüz Tanıma ve Karşılama (Giriş Simülasyonu)
-Uygulama, kamera karşısına geçen çocuğu otomatik olarak algılar ve ekranın üst kısmında neon efektli kişiselleştirilmiş bir karşılama mesajı gösterir. Bu özellik, çocukların teknolojiyle olan bağını güçlendirir.
-![Yüz Tanıma Karşılama Arayüzü](images/gercek_face_greeting.png)
+#### 4.1.4. Özellik: Duygu Analizi ve Mimik Taklitli Giriş (Emotion AI)
+Uygulama, MediaPipe Face Landmarker teknolojisini kullanarak çocuğun yüzündeki 468'den fazla noktayı takip eder. 
+*   **Mimik Taklidi:** Çocuk göz kırptığında veya ağzını açtığında ekrandaki emoji de aynı hareketleri yaparak interaktif bir bağ kurar.
+*   **Gülümseme Kilidi:** Giriş yapmak için "mutluluk" skoru hesaplanır. Çocuk gülümsediğinde ekrandaki ilerleme halkası dolar ve uygulama güvenli bir şekilde açılır.
+![Yüz Taklit ve Gülümseme Arayüzü](images/gercek_smile_entry.png)
 
 ---
 
