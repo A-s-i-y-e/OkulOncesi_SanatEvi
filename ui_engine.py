@@ -150,3 +150,37 @@ def draw_art_frame(canvas_img, artist_name="Minik Sanatci"):
     draw_neon_text(framed, text, int(tx), int(ty), cv2.FONT_HERSHEY_DUPLEX, 0.7, (0, 200, 255), 1)
     
     return framed
+
+def draw_login_screen(img, face_present, now):
+    h, w = img.shape[:2]
+    
+    # Koyu, şık bir arkaplan katmanı (hafif karartma)
+    overlay = img.copy()
+    cv2.rectangle(overlay, (0, 0), (w, h), (30, 10, 10), -1)
+    cv2.addWeighted(overlay, 0.4, img, 0.6, 0, img)
+    
+    # Başlık
+    title = "MINIK ELLER ATOLYESI"
+    draw_neon_text(img, title, w//2 - 280, h//2 - 150, cv2.FONT_HERSHEY_DUPLEX, 1.2, (255, 100, 255), 3)
+    
+    if not face_present:
+        # Yüz bekleniyor mesajı
+        msg = "Seni gormek istiyoruz! Kameraya bakar misin? :)"
+        cv2.putText(img, msg, (w//2 - 250, h//2 + 50), cv2.FONT_HERSHEY_DUPLEX, 0.7, (200, 200, 200), 1, cv2.LINE_AA)
+        
+        # Hareketli bir "tarama" çizgisi efekti
+        scan_y = int((now * 150) % h)
+        cv2.line(img, (0, scan_y), (w, scan_y), (255, 100, 255), 1)
+    else:
+        # Yüz bulundu! Başla butonu
+        msg = "Harika! Seni gordum. Hazirsan baslayalim!"
+        draw_neon_text(img, msg, w//2 - 240, h//2, cv2.FONT_HERSHEY_DUPLEX, 0.7, (0, 255, 200), 1)
+        
+        # BAŞLA Butonu (Parlayan)
+        btn_x, btn_y, btn_w, btn_h = w//2 - 100, h//2 + 80, 200, 70
+        draw_glowing_rect(img, btn_x, btn_y, btn_w, btn_h, 20, (0, 255, 200), thickness=3)
+        cv2.putText(img, "BASLA", (btn_x + 55, btn_y + 45), cv2.FONT_HERSHEY_DUPLEX, 1.0, (255, 255, 255), 2)
+        
+        return (btn_x, btn_y, btn_w, btn_h) # Buton koordinatlarını dön
+    
+    return None

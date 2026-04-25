@@ -63,10 +63,11 @@ Uygulama, **Modüler Katmanlı Mimari** kullanılarak geliştirilmiştir. Ayrıc
 ### 4.1. Temel Özellikler ve Kullanıcı Senaryoları
 
 **Tipik Kullanıcı Senaryosu:**
-1. **Giriş:** Çocuk uygulamayı açar ve ana menüde elini gezdirerek neon efektli butonları keşfeder.
-2. **Aksiyon:** Havada "İşaret Parmağı" (☝️) jestiyle tuval üzerine bir güneş çizer.
-3. **Etkileşim:** Yanlış çizdiği bir yeri "Zafer İşareti" (✌️) yaparak siler.
-4. **Kayıt:** Çizimini bitirdiğinde "Başparmak" (👍) jestiyle eserini yerel galeriye kaydeder.
+1. **Giriş:** Uygulama "Sihirli Giriş Ekranı" ile açılır. Çocuk kameraya bakar; AI yüzünü tanıdığında ekranda parlayan bir "BAŞLA" butonu belirir. Çocuk elini butona doğru uzatarak ana menüye giriş yapar.
+2. **Menü:** Ana menüde elini gezdirerek neon efektli butonları keşfeder ve bir mod seçer.
+3. **Aksiyon:** Havada "İşaret Parmağı" (☝️) jestiyle tuval üzerine bir güneş çizer.
+4. **Etkileşim:** Yanlış çizdiği bir yeri "Zafer İşareti" (✌️) yaparak siler.
+5. **Kayıt:** Çizimini bitirdiğinde "Başparmak" (👍) jestiyle eserini yerel galeriye kaydeder.
 
 #### 4.1.1. Özellik: El Jesti ile Serbest Çizim
 Kullanıcı işaret parmağını (☝️) kaldırarak çizim moduna geçer. Havada parmağını hareket ettirerek neon fırçalarla resim yapabilir.

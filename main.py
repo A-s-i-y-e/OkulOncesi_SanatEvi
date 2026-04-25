@@ -34,7 +34,7 @@ from ui import DrawingUI
 from gesture_icons import draw_active_gesture_display
 from menu import MainMenu
 from game import BalloonGame
-from ui_engine import PointerParticleSystem, draw_neon_text
+from ui_engine import PointerParticleSystem, draw_neon_text, draw_login_screen
 from face_detector import FaceDetector
 
 
@@ -92,7 +92,7 @@ def main():
     detector = HandDetector(max_hands=2)
     
     # Uygulama Durumları ve Sınıfları
-    current_state = 'menu'
+    current_state = 'login'
     
     canvas   = DrawingCanvas(w, h)
     ui       = DrawingUI(w, h)
@@ -166,7 +166,19 @@ def main():
 
         # --- STATE MACHINE (DURUM YÖNETİMİ) ---
 
-        if current_state == 'menu':
+        if current_state == 'login':
+            face_here = face_detector.is_face_present(frame)
+            btn_coords = draw_login_screen(frame, face_here, now)
+            
+            if btn_coords and index_tips:
+                bx, by, bw, bh = btn_coords
+                for tip in index_tips:
+                    if bx <= tip[0] <= bx + bw and by <= tip[1] <= by + bh:
+                        current_state = 'menu'
+                        time.sleep(0.5)
+                        break
+
+        elif current_state == 'menu':
             # Menü Ekranı İşlemleri
             selected = menu.draw_menu(frame, index_tips)
             
