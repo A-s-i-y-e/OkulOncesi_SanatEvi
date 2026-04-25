@@ -81,17 +81,18 @@ Proje, her modülün tek bir sorumluluğu olduğu (Single Responsibility Princip
 ```text
 OkulOncesi_Cizim/
 ├── main.py              # Ana döngü ve State yönetimi
-├── menu.py              # Holografik menü sınıfları
-├── ui_engine.py         # Neon efektler ve Parçacık motoru
 ├── hand_detector.py     # MediaPipe el tespit sarmalayıcı
-├── pose_detector.py     # Vücut takip modülü
+├── ui_engine.py         # Neon efektler ve Parçacık motoru
+├── menu.py              # Holografik menü sınıfları
 ├── canvas.py            # Çizim katmanları ve fırça mantığı
-├── game.py              # Balon patlatma oyunu mantığı
-├── pose_game.py         # Elma yakalama oyunu mantığı
-├── templates.py         # Boyama şablonları (Ayı, Araba vb.)
+├── templates.py         # Boyama şablonları
+├── game.py              # Balon patlatma oyunu
+├── pose_game.py         # Elma yakalama oyunu
+├── tests/               # Birim testleri (Unit Tests)
+│   └── test_logic.py    # Modül doğrulama testleri
 ├── docs/                # Raporlar ve dökümantasyon
 │   └── images/          # Ekran görüntüleri ve diyagramlar
-└── README.md            # Proje kurulum ve kullanım kılavuzu
+└── README.md            # Kurulum kılavuzu
 ```
 
 **Kod Örneği 1: Jest Algılama Mantığı**
