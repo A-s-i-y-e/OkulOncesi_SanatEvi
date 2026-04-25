@@ -34,7 +34,7 @@ from ui import DrawingUI
 from gesture_icons import draw_active_gesture_display
 from menu import MainMenu
 from game import BalloonGame
-from ui_engine import PointerParticleSystem, draw_neon_text, draw_login_screen
+from ui_engine import PointerParticleSystem, draw_neon_text, draw_login_screen, draw_glass_panel
 from face_detector import FaceDetector
 from emotion_game import EmotionGame
 
@@ -219,6 +219,17 @@ def main():
                 # Ekrana cizdir ve frame'i guncelle
                 frame = game.draw_game(frame, index_tips)
             
+            # --- LOGO VE BASLIK (Üst Orta) ---
+            lx, ly = w // 2 - 180, 35
+            cv2.circle(frame, (lx, ly), 10, (255, 255, 255), -1, cv2.LINE_AA)
+            finger_colors = [(0,0,255), (0,255,255), (0,255,0), (255,0,0), (255,0,255)]
+            for i, color in enumerate(finger_colors):
+                angle = -160 + i * 40
+                rad = np.deg2rad(angle)
+                fx, fy = int(lx + np.cos(rad) * 18), int(ly + np.sin(rad) * 18)
+                cv2.line(frame, (lx, ly), (fx, fy), color, 4, cv2.LINE_AA)
+            draw_neon_text(frame, "MINIK ELLER ATOLYESI", w // 2 - 155, 45, cv2.FONT_HERSHEY_DUPLEX, 0.6, (255, 100, 255), 1)
+            
             # Geri donus butonu (Ev ikonu)
             if 'icon_home' in locals() and icon_home is not None:
                 bx, by = w - 80, 20
@@ -236,13 +247,26 @@ def main():
             if 'pose_game_inst' in locals() and pose_game_inst:
                 frame = pose_game_inst.draw_game(frame, nose_pos)
             
-            # Geri donus butonu (Sag ust)
-            cv2.rectangle(frame, (w - 180, 20), (w - 20, 70), (50, 50, 200), -1)
-            cv2.putText(frame, "MENU [M]", (w - 165, 55), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 2, cv2.LINE_AA)
+            # --- LOGO VE BASLIK (Üst Orta) ---
+            lx, ly = w // 2 - 180, 35
+            cv2.circle(frame, (lx, ly), 10, (255, 255, 255), -1, cv2.LINE_AA)
+            finger_colors = [(0,0,255), (0,255,255), (0,255,0), (255,0,0), (255,0,255)]
+            for i, color in enumerate(finger_colors):
+                angle = -160 + i * 40
+                rad = np.deg2rad(angle)
+                fx, fy = int(lx + np.cos(rad) * 18), int(ly + np.sin(rad) * 18)
+                cv2.line(frame, (lx, ly), (fx, fy), color, 4, cv2.LINE_AA)
+            draw_neon_text(frame, "MINIK ELLER ATOLYESI", w // 2 - 155, 45, cv2.FONT_HERSHEY_DUPLEX, 0.6, (255, 100, 255), 1)
+
+            # Geri donus butonu (Ev ikonu)
+            if 'icon_home' in locals() and icon_home is not None:
+                bx, by = w - 80, 20
+                draw_glass_panel(frame, bx-5, by-5, 60, 60, 10, color=(100, 100, 255), alpha=0.3)
+                frame[by:by+50, bx:bx+50] = cv2.max(frame[by:by+50, bx:bx+50], icon_home)
 
             for tip in index_tips:
                 tx, ty = tip
-                if w - 180 <= tx <= w - 20 and 20 <= ty <= 70:
+                if w - 80 <= tx <= w - 20 and 20 <= ty <= 80:
                     current_state = 'menu'
                     time.sleep(0.5)
                     break
