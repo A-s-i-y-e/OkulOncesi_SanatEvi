@@ -32,10 +32,9 @@ from hand_detector import HandDetector
 from canvas import DrawingCanvas
 from ui import DrawingUI
 from gesture_icons import draw_active_gesture_display
-from menu import MainMenu
-from game import BalloonGame
 from ui_engine import PointerParticleSystem, draw_neon_text, draw_login_screen
 from face_detector import FaceDetector
+from emotion_game import EmotionGame
 
 
 # -----------------------------------------------------------------------
@@ -204,6 +203,9 @@ def main():
                 current_state = 'pose_game'
                 from pose_game import PoseAppleGame
                 pose_game_inst = PoseAppleGame(w, h)
+            elif selected == 'emotion_game':
+                current_state = 'emotion_game'
+                emotion_game_inst = EmotionGame(w, h)
 
         elif current_state == 'game':
             # Oyun Ekranı İşlemleri
@@ -229,6 +231,28 @@ def main():
             # Geri donus butonu (Sag ust)
             cv2.rectangle(frame, (w - 180, 20), (w - 20, 70), (50, 50, 200), -1)
             cv2.putText(frame, "MENU [M]", (w - 165, 55), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 2, cv2.LINE_AA)
+
+            for tip in index_tips:
+                tx, ty = tip
+                if w - 180 <= tx <= w - 20 and 20 <= ty <= 70:
+                    current_state = 'menu'
+                    time.sleep(0.5)
+                    break
+
+        elif current_state == 'emotion_game':
+            if 'emotion_game_inst' in locals():
+                # Yüz verilerini al ve oyuna aktar
+                face_data = face_detector.get_face_data(frame)
+                emotion_game_inst.update(face_data)
+                frame = emotion_game_inst.draw(frame)
+                
+            # Geri donus butonu kontrolü
+            for tip in index_tips:
+                tx, ty = tip
+                if w - 180 <= tx <= w - 20 and 20 <= ty <= 70:
+                    current_state = 'menu'
+                    time.sleep(0.5)
+                    break
 
         elif current_state in ['draw', 'template']:
             # --- Araç/Renk Seçimi (El Jesti ile) ---

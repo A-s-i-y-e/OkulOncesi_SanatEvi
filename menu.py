@@ -9,12 +9,12 @@ class MainMenu:
         self.h = height
         self.particles = ParticleSystem(width, height, 80)
         
-        self.btn_w, self.btn_h = 320, 140
-        self.gap_x, self.gap_y = 60, 40
+        self.btn_w, self.btn_h = 320, 110 # Buton yüksekliği biraz küçültüldü
+        self.gap_x, self.gap_y = 60, 25
         self.total_w = (self.btn_w * 2) + self.gap_x
-        self.total_h = (self.btn_h * 2) + self.gap_y
+        self.total_h = (self.btn_h * 3) + (self.gap_y * 2) # 3 satır
         self.start_x = (self.w - self.total_w) // 2
-        self.start_y = (self.h - self.total_h) // 2 + 50
+        self.start_y = (self.h - self.total_h) // 2 + 60
         
         self.buttons = {
             'draw': {
@@ -44,6 +44,14 @@ class MainMenu:
                 'text': 'ELMA YAKALA',
                 'hover_anim': 0.0,
                 'progress': 0.0
+            },
+            'emotion_game': {
+                'row': 2, 'col': 0, # 3. satırda tek başlagıç
+                'color': (255, 255, 100),
+                'text': 'DUYGU AYNASI',
+                'hover_anim': 0.0,
+                'progress': 0.0,
+                'is_centered': True # Özel hizalama için
             }
         }
         self.last_time = time.time()
@@ -66,7 +74,12 @@ class MainMenu:
         selected_btn = None
         
         for key, info in self.buttons.items():
-            bx = self.start_x + info['col'] * (self.btn_w + self.gap_x)
+            # Eğer buton ortalanmışsa x koordinatını farklı hesapla
+            if info.get('is_centered'):
+                bx = (self.w - self.btn_w) // 2
+            else:
+                bx = self.start_x + info['col'] * (self.btn_w + self.gap_x)
+                
             by = self.start_y + info['row'] * (self.btn_h + self.gap_y)
             bw = self.btn_w
             bh = self.btn_h
