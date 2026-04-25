@@ -10,8 +10,8 @@ class MainMenu:
         self.h = height
         self.particles = ParticleSystem(width, height, 80)
         
-        self.btn_w, self.btn_h = 280, 240 # Kareye yakın butonlar
-        self.gap_x, self.gap_y = 60, 40
+        self.btn_w, self.btn_h = 280, 220
+        self.gap_x, self.gap_y = 60, 30
         self.total_w = (self.btn_w * 2) + self.gap_x
         self.total_h = (self.btn_h * 3) + (self.gap_y * 2)
         self.start_x = (self.w - self.total_w) // 2
@@ -30,7 +30,8 @@ class MainMenu:
         for key, fname in icon_files.items():
             if os.path.exists(fname):
                 img = cv2.imread(fname)
-                self.icons[key] = cv2.resize(img, (200, 200)) # İkon boyutu
+                if img is not None:
+                    self.icons[key] = cv2.resize(img, (160, 160)) # Boyutu biraz küçülttük (Güvenli alan)
             else:
                 self.icons[key] = None
 
@@ -83,27 +84,29 @@ class MainMenu:
             anim = info['hover_anim']
             cbx, cby, cbw, cbh = bx - int(anim*15), by - int(anim*15), bw + int(anim*30), bh + int(anim*30)
 
-            # Buton Arkaplanı
             draw_glass_panel(frame, cbx, cby, cbw, cbh, r=30, color=info['color'], alpha=0.1 + anim*0.1)
-            if anim > 0.1:
-                draw_glowing_rect(frame, cbx, cby, cbw, cbh, r=30, color=info['color'], thickness=2, glow_radius=int(10+anim*10), intensity_mult=anim)
-
-            # --- İKONU ÇİZ ---
+            
+            # --- GÜVENLİ İKON ÇİZİMİ ---
             icon = self.icons.get(key)
             if icon is not None:
-                # İkonu merkeze yerleştir
-                ix, iy = cbx + (cbw - 200)//2, cby + (cbh - 200)//2
-                # İkonun siyah arka planını buton rengine göre harmanla (AddWeighted veya maskeleme)
-                roi = frame[iy:iy+200, ix:ix+200]
-                # İkon siyah arka planlı olduğu için direkt toplamak (cv2.add) neon efekti verir
-                # Ama daha temiz bir görüntü için max alabiliriz
-                icon_colored = cv2.addWeighted(icon, 1.0, np.zeros_like(icon), 0, 0)
-                frame[iy:iy+200, ix:ix+200] = cv2.max(roi, icon_colored)
+                isize = 160
+                ix, iy = cbx + (cbw - isize)//2, cby + (cbh - isize)//2
+                
+                # Ekran sınırlarını kontrol et
+                x1, y1 = max(0, ix), max(0, iy)
+                x2, y2 = min(self.w, ix + isize), min(self.h, iy + isize)
+                
+                if x2 > x1 and y2 > y1:
+                    # İkonun ilgili kısmını kes (eğer ekrana tam sığmıyorsa)
+                    icon_part = icon[(y1-iy):(y2-iy), (x1-ix):(x2-ix)]
+                    roi = frame[y1:y2, x1:x2]
+                    # Karıştırma
+                    frame[y1:y2, x1:x2] = cv2.max(roi, icon_part)
 
             # İlerleme Çubuğu
             if info['progress'] > 0:
                 bar_ratio = min(1.0, info['progress'] / 1.2)
-                cv2.rectangle(frame, (cbx + 20, cby + cbh - 15), (cbx + 20 + int((cbw-40)*bar_ratio), cby + cbh - 8), info['color'], -1)
+                cv2.rectangle(frame, (cbx + 20, cby + cbh - 12), (cbx + 20 + int((cbw-40)*bar_ratio), cby + cbh - 5), info['color'], -1)
                 
         for p in cursor_poses:
             draw_neon_text(frame, "+", p[0]-15, p[1]+15, cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 255, 255), thickness_base=2)

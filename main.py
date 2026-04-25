@@ -110,6 +110,10 @@ def main():
     last_magic_toggle_time = 0.0
     smile_progress = 0.0  # Gülümseme doluluk oranı (0.0 - 1.0)
 
+    # İkonları yükle (Küçük yardımcı ikonlar)
+    icon_home = cv2.imread('icon_home.png')
+    if icon_home is not None: icon_home = cv2.resize(icon_home, (50, 50))
+    
     cv2.namedWindow(WINDOW_TITLE, cv2.WINDOW_NORMAL)
     cv2.resizeWindow(WINDOW_TITLE, w, h)
 
@@ -215,15 +219,17 @@ def main():
                 # Ekrana cizdir ve frame'i guncelle
                 frame = game.draw_game(frame, index_tips)
             
-            # Geri donus butonu (Sag ust)
-            cv2.rectangle(frame, (w - 180, 20), (w - 20, 70), (50, 50, 200), -1)
-            cv2.putText(frame, "MENU [M]", (w - 165, 55), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 2, cv2.LINE_AA)
+            # Geri donus butonu (Ev ikonu)
+            if 'icon_home' in locals() and icon_home is not None:
+                bx, by = w - 80, 20
+                draw_glass_panel(frame, bx-5, by-5, 60, 60, 10, color=(100, 100, 255), alpha=0.3)
+                frame[by:by+50, bx:bx+50] = cv2.max(frame[by:by+50, bx:bx+50], icon_home)
             
             for tip in index_tips:
                 tx, ty = tip
-                if w - 180 <= tx <= w - 20 and 20 <= ty <= 70:
+                if w - 80 <= tx <= w - 20 and 20 <= ty <= 80:
                     current_state = 'menu'
-                    time.sleep(0.5) # Hemen geri girmesin diye kucuk bir bekleme
+                    time.sleep(0.5)
                     break
 
         elif current_state == 'pose_game':
@@ -248,10 +254,16 @@ def main():
                 emotion_game_inst.update(face_data)
                 frame = emotion_game_inst.draw(frame, face_data)
                 
+            # Geri donus butonu (Ev ikonu)
+            if 'icon_home' in locals() and icon_home is not None:
+                bx, by = w - 80, 20
+                draw_glass_panel(frame, bx-5, by-5, 60, 60, 10, color=(100, 100, 255), alpha=0.3)
+                frame[by:by+50, bx:bx+50] = cv2.max(frame[by:by+50, bx:bx+50], icon_home)
+
             # Geri donus butonu kontrolü
             for tip in index_tips:
                 tx, ty = tip
-                if w - 180 <= tx <= w - 20 and 20 <= ty <= 70:
+                if w - 80 <= tx <= w - 20 and 20 <= ty <= 80:
                     current_state = 'menu'
                     time.sleep(0.5)
                     break
