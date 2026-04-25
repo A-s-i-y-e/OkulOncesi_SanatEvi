@@ -47,7 +47,7 @@ Uygulama **Modüler Katmanlı Mimari** kullanılarak geliştirilmiştir:
 | **Mantık (Logic)** | Koordinatların jeste dönüştürülmesi | `hand_detector.py` (detect_gesture) |
 | **Arayüz (UI/UX)** | Neon efektler ve görsel geribildirim | `ui_engine.py`, `menu.py` |
 
-![Detaylı Sistem Mimarisi ve Veri Akış Şeması](images/sistem_mimarisi_detayli_v2_1777135231219.png)
+![Katmanlı Sistem Mimarisi Şeması (Layered Architecture)](images/katmanli_mimari_semasi_v3_1777135367523.png)
 ![Gerçek Ana Menü Arayüzü](images/gercek_menu.png)
 
 ---
