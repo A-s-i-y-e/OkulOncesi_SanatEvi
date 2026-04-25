@@ -1,4 +1,4 @@
-# 🏗️ Yazılım Tasarım Belgesi (SDD) - Okul Öncesi Sanat Evi
+# 🏗️ Yazılım Tasarım Belgesi (SDD) - Minik Eller Atölyesi
 
 ## 1. Sistem Mimarisi
 Proje, modüler bir mimari üzerine kurulmuştur ve "Katmanlı Mimari" prensiplerini takip eder.

@@ -60,7 +60,7 @@ class MainMenu:
         
         self.particles.update_and_draw(frame)
 
-        draw_neon_text(frame, "OKUL ONCESI SANAT EVI", self.w // 2 - 380, 100, cv2.FONT_HERSHEY_DUPLEX, 1.8, (255, 100, 200), thickness_base=3)
+        draw_neon_text(frame, "MINIK ELLER ATOLYESI", self.w // 2 - 380, 100, cv2.FONT_HERSHEY_DUPLEX, 1.8, (255, 100, 200), thickness_base=3)
         draw_neon_text(frame, "Holografik Arayuz Devrede...", self.w // 2 - 180, 150, cv2.FONT_HERSHEY_DUPLEX, 0.8, (100, 255, 255), thickness_base=1)
 
         selected_btn = None

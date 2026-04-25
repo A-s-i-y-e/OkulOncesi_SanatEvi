@@ -1,7 +1,7 @@
-# 📄 Yazılım Gereksinim Belirtimi (SRS) - Okul Öncesi Sanat Evi
+# 📄 Yazılım Gereksinim Belirtimi (SRS) - Minik Eller Atölyesi
 
 ## 1. Giriş
-Bu belge, **Okul Öncesi Sanat Evi** projesi için hazırlanan yazılım gereksinim belgesidir. Proje, okul öncesi çocukların el hareketleri ve vücut takibi ile dijital ortamda sanat yapmalarına ve eğitici oyunlar oynamalarına yardımcı olmayı amaçlar.
+Bu belge, **Minik Eller Atölyesi** projesi için hazırlanan yazılım gereksinim belgesidir. Proje, okul öncesi çocukların el hareketleri ve vücut takibi ile dijital ortamda sanat yapmalarına ve eğitici oyunlar oynamalarına yardımcı olmayı amaçlar.
 
 ## 2. Genel Özellikler
 Uygulama, MediaPipe kütüphanesi ile gerçek zamanlı görüntü işleme yaparak el ve vücut konumlarını tespit eder.
