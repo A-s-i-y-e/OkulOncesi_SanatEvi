@@ -153,21 +153,14 @@ def main():
                 pose_detector = PoseDetector()
             pose_detector.find_pose(frame, draw=True)
             nose_pos = pose_detector.get_nose()
-            stable_gesture = 'none'
+        
+        # --- EL TARAYICIYI HER ZAMAN ÇALIŞTIR ---
+        hand_found = detector.find_hands(frame, draw=True)
+        stable_gesture = detector.get_stable_gesture() 
+        all_hands = detector.get_all_hands()
+        if not all_hands:
             all_hands = []
-            index_tips = []
-        else:
-            hand_found = detector.find_hands(frame, draw=True)
-
-            # --- Jest Belirleme ---
-            # Geriye dönük uyumluluk (Kontrol arayüzü için 1. eli kullan)
-            stable_gesture = detector.get_stable_gesture() 
-            
-            all_hands = detector.get_all_hands()
-            if not all_hands:
-                all_hands = []
-                
-            index_tips = [h['index_tip'] for h in all_hands if h['index_tip']]
+        index_tips = [h['index_tip'] for h in all_hands if h['index_tip']]
 
         # --- STATE MACHINE (DURUM YÖNETİMİ) ---
 
