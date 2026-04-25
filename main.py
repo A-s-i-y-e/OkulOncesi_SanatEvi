@@ -1,6 +1,6 @@
 """
 main.py
-Okul Öncesi El Hareketi ile Resim Çizimi
+Okul Öncesi - Minik Eller Atölyesi ile Çizim
 =========================================
 Ana uygulama döngüsü.
 
@@ -47,7 +47,7 @@ from ui_engine import PointerParticleSystem
 CAMERA_INDEX = 0        # Kamera ID (0: varsayılan)
 WIN_WIDTH  = 1280
 WIN_HEIGHT = 720
-WINDOW_TITLE = "El Hareketi ile Resim Cizimi | Q=Cikis"
+WINDOW_TITLE = "Minik Eller Atolyesi | Q=Cikis"
 
 # Mesaj gösterim süresi (saniye)
 MSG_DURATION = 2.0
@@ -110,7 +110,7 @@ def main():
     cv2.resizeWindow(WINDOW_TITLE, w, h)
 
     print("=" * 50)
-    print("  Okul Öncesi El Hareketi ile Resim Çizimi")
+    print("  Minik Eller Atölyesi - El Hareketi ile Çizim")
     print("=" * 50)
     print("  Q veya ESC -> Cikis")
     print("  S          -> Kaydet")

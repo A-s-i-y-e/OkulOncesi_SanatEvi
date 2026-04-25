@@ -1,4 +1,4 @@
-# 🎨 Okul Öncesi Sanat Evi (AI Destekli Çizim ve Oyun)
+# 🎨 Minik Eller Atölyesi (AI Destekli Çizim ve Oyun)
 
 Bu proje, çocukların el hareketleri ve vücut takibi ile dijital sanat yapmalarını sağlayan, yapay zeka (MediaPipe) destekli profesyonel bir eğitim ve eğlence uygulamasıdır.
 
