@@ -166,7 +166,8 @@ def main():
         # --- STATE MACHINE (DURUM YÖNETİMİ) ---
 
         if current_state == 'login':
-            smile_score = face_detector.get_smile_score(frame)
+            face_data = face_detector.get_face_data(frame)
+            smile_score = face_data['smile']
             
             # Gülümseme eşiği üzerindeyse barı doldur, değilse boşalt
             if smile_score > 0.40:
@@ -176,7 +177,7 @@ def main():
                 
             smile_progress = max(0.0, min(1.0, smile_progress))
             
-            should_enter = draw_login_screen(frame, smile_score, smile_progress, now)
+            should_enter = draw_login_screen(frame, face_data, smile_progress, now)
             
             if should_enter:
                 current_state = 'menu'

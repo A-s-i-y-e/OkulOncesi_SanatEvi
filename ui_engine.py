@@ -151,51 +151,69 @@ def draw_art_frame(canvas_img, artist_name="Minik Sanatci"):
     
     return framed
 
-def draw_login_screen(img, smile_score, smile_progress, now):
+def draw_login_screen(img, face_data, smile_progress, now):
     h, w = img.shape[:2]
     
     # Koyu, şık ve yumuşak bir arkaplan
     overlay = img.copy()
-    cv2.rectangle(overlay, (0, 0), (w, h), (40, 20, 30), -1)
+    cv2.rectangle(overlay, (0, 0), (w, h), (30, 15, 25), -1)
     cv2.addWeighted(overlay, 0.4, img, 0.6, 0, img)
     
-    # MERKEZİ GÜLEN YÜZ (SMILEY) ÇİZİMİ
     cx, cy = w // 2, h // 2
     r = 150
     
-    # Gülümseme miktarına göre rengi belirle
-    # smile_progress 0.0 -> 1.0 arası gelir
-    glow_color = (
-        int(150 - smile_progress * 50), # R
-        int(150 + smile_progress * 105), # G
-        int(255)                        # B (Sarımsıdan Maviye geçiş gibi veya sabit neon)
+    smile_score = face_data['smile']
+    
+    # Renk paleti (Gülümseme ilerledikçe daha canlı bir turkuaz/yeşil)
+    main_color = (
+        int(200 - smile_progress * 100), 
+        int(150 + smile_progress * 105), 
+        int(255)
     )
     
     # 1. İlerleme Halkası (Progress Ring)
-    # smile_progress arttıkça halkanın açısı artar
     angle = int(smile_progress * 360)
-    cv2.ellipse(img, (cx, cy), (r + 20, r + 20), -90, 0, angle, glow_color, 8, cv2.LINE_AA)
-    # Halkanın dışına ince bir kılavuz çizgi
-    cv2.circle(img, (cx, cy), r + 20, (100, 100, 100), 1, cv2.LINE_AA)
+    cv2.ellipse(img, (cx, cy), (r + 25, r + 25), -90, 0, angle, main_color, 10, cv2.LINE_AA)
+    cv2.circle(img, (cx, cy), r + 25, (80, 80, 80), 1, cv2.LINE_AA)
     
-    # 2. Ana Kafa (Dış Çerçeve)
-    alpha = 0.3 + (smile_score * 0.4)
+    # 2. Canlı Taklit Yapan Emoji
+    alpha = 0.4 + (smile_score * 0.4)
     overlay_smiley = img.copy()
-    cv2.circle(overlay_smiley, (cx, cy), r, glow_color, 4, cv2.LINE_AA)
     
-    # 3. Gözler
-    eye_offset_x = 50
-    eye_offset_y = 40
-    cv2.circle(overlay_smiley, (cx - eye_offset_x, cy - eye_offset_y), 15, glow_color, -1, cv2.LINE_AA)
-    cv2.circle(overlay_smiley, (cx + eye_offset_x, cy - eye_offset_y), 15, glow_color, -1, cv2.LINE_AA)
+    # Kafa Çerçevesi
+    cv2.circle(overlay_smiley, (cx, cy), r, main_color, 5, cv2.LINE_AA)
     
-    # 4. Ağız
-    smile_depth = int(20 + smile_score * 60)
-    axes = (80, smile_depth)
-    cv2.ellipse(overlay_smiley, (cx, cy + 30), axes, 0, 0, 180, glow_color, 6, cv2.LINE_AA)
+    # --- GÖZLER (TAKİPLİ) ---
+    eye_x_off = 55
+    eye_y_off = 45
     
-    # Katmanı ana resme bindir
+    # Sol Göz
+    if face_data['blink_left'] > 0.5: # Göz kapalı
+        cv2.line(overlay_smiley, (cx - eye_x_off - 15, cy - eye_y_off), (cx - eye_x_off + 15, cy - eye_y_off), main_color, 4, cv2.LINE_AA)
+    else: # Göz açık
+        cv2.circle(overlay_smiley, (cx - eye_x_off, cy - eye_y_off), 18, main_color, -1, cv2.LINE_AA)
+        cv2.circle(overlay_smiley, (cx - eye_x_off, cy - eye_y_off), 6, (255, 255, 255), -1, cv2.LINE_AA) # Parlama
+
+    # Sağ Göz
+    if face_data['blink_right'] > 0.5:
+        cv2.line(overlay_smiley, (cx + eye_x_off - 15, cy - eye_y_off), (cx + eye_x_off + 15, cy - eye_y_off), main_color, 4, cv2.LINE_AA)
+    else:
+        cv2.circle(overlay_smiley, (cx + eye_x_off, cy - eye_y_off), 18, main_color, -1, cv2.LINE_AA)
+        cv2.circle(overlay_smiley, (cx + eye_x_off, cy - eye_y_off), 6, (255, 255, 255), -1, cv2.LINE_AA)
+
+    # --- AĞIZ (TAKİPLİ) ---
+    mouth_y = cy + 40
+    # Ağız açıklığına göre elipsin yüksekliğini ayarla
+    jaw_h = int(10 + face_data['jaw_open'] * 70)
+    # Gülümseme derinliğine göre kavis ayarla
+    smile_curve = int(smile_score * 60)
+    
+    if face_data['jaw_open'] > 0.15: # Ağız açıksa elips çiz
+        cv2.ellipse(overlay_smiley, (cx, mouth_y), (80, jaw_h), 0, 0, 360, main_color, 5, cv2.LINE_AA)
+    else: # Ağız kapalıysa sadece gülümseme yayı çiz
+        axes = (80, 20 + smile_curve)
+        cv2.ellipse(overlay_smiley, (cx, mouth_y - 10), axes, 0, 0, 180, main_color, 6, cv2.LINE_AA)
+    
     cv2.addWeighted(overlay_smiley, alpha, img, 1 - alpha, 0, img)
     
-    # Eğer %100 dolduysa True dön
     return smile_progress >= 1.0

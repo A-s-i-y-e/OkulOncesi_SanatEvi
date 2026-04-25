@@ -1,7 +1,7 @@
 """
 face_detector.py
-Gülümseme Algılama Modülü - MediaPipe Face Landmarker kullanarak 
-kullanıcının gülümsediğini tespit eder.
+Gülümseme ve Yüz Taklit Modülü - MediaPipe Face Landmarker kullanarak 
+kullanıcının ifadelerini (gülümseme, göz kırpma, ağız açma) takip eder.
 """
 
 import cv2
@@ -10,15 +10,12 @@ from mediapipe.tasks import python
 from mediapipe.tasks.python import vision
 import os
 import urllib.request
-import math
 
 class FaceDetector:
     def __init__(self):
-        # 1. Face Landmarker Modelini İndir
         self.model_path = os.path.join(os.path.dirname(__file__), 'face_landmarker.task')
         self._ensure_model_exists()
 
-        # 2. MediaPipe Task Ayarları
         self.detector = None
         if os.path.exists(self.model_path):
             try:
@@ -26,11 +23,9 @@ class FaceDetector:
                     model_bytes = f.read()
                 
                 base_options = python.BaseOptions(model_asset_buffer=model_bytes)
-                # Blendshapes (gülümseme gibi ifadeler) için ayarlar
                 options = vision.FaceLandmarkerOptions(
                     base_options=base_options,
                     output_face_blendshapes=True,
-                    output_facial_transformation_matrixes=True,
                     num_faces=1
                 )
                 self.detector = vision.FaceLandmarker.create_from_options(options)
@@ -38,21 +33,24 @@ class FaceDetector:
                 print(f"[HATA] FaceLandmarker başlatılamadı: {e}")
 
     def _ensure_model_exists(self):
-        """Face landmarker model dosyasını indirir."""
         if not os.path.exists(self.model_path):
-            print("[BİLGİ] Gülümseme algılama modeli indiriliyor...")
+            print("[BİLGİ] Yüz analiz modeli indiriliyor...")
             url = "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task"
-            try:
-                urllib.request.urlretrieve(url, self.model_path)
-                print("[BİLGİ] Model başarıyla indirildi!")
-            except Exception as e:
-                print(f"[HATA] Model indirilemedi! {e}")
+            urllib.request.urlretrieve(url, self.model_path)
 
-    def get_smile_score(self, frame):
+    def get_face_data(self, frame):
         """
-        Kullanıcının gülümseme skorunu döner (0.0 - 1.0 arası).
+        Gülümseme, göz kırpma ve ağız açıklığı verilerini döner.
         """
-        if self.detector is None: return 0.0
+        data = {
+            'smile': 0.0,
+            'blink_left': 0.0,
+            'blink_right': 0.0,
+            'jaw_open': 0.0,
+            'present': False
+        }
+        
+        if self.detector is None: return data
         
         try:
             rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -60,35 +58,24 @@ class FaceDetector:
             result = self.detector.detect(mp_image)
             
             if result.face_blendshapes:
-                # MediaPipe Blendshapes içinde mouthSmileLeft ve mouthSmileRight değerlerini ara
-                # Bu değerler 0.0 ile 1.0 arasında gelir.
+                data['present'] = True
                 blendshapes = result.face_blendshapes[0]
-                smile_left = 0.0
-                smile_right = 0.0
                 
                 for bs in blendshapes:
-                    if bs.category_name == 'mouthSmileLeft':
-                        smile_left = bs.score
-                    elif bs.category_name == 'mouthSmileRight':
-                        smile_right = bs.score
-                
-                # İki tarafın ortalamasını al
-                return (smile_left + smile_right) / 2.0
+                    if bs.category_name == 'mouthSmileLeft': data['smile'] += bs.score / 2
+                    elif bs.category_name == 'mouthSmileRight': data['smile'] += bs.score / 2
+                    elif bs.category_name == 'eyeBlinkLeft': data['blink_left'] = bs.score
+                    elif bs.category_name == 'eyeBlinkRight': data['blink_right'] = bs.score
+                    elif bs.category_name == 'jawOpen': data['jaw_open'] = bs.score
         except:
             pass
-        return 0.0
+        return data
 
     def is_face_present(self, frame):
-        """Ekranda en az bir yüz olup olmadığını döndürür."""
-        if self.detector is None: return False
-        try:
-            rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb_frame)
-            result = self.detector.detect(mp_image)
-            return len(result.face_landmarks) > 0
-        except:
-            return False
+        """Eski kodlarla uyumluluk için."""
+        d = self.get_face_data(frame)
+        return d['present']
 
-    def is_smiling(self, frame, threshold=0.45):
-        """Kullanıcının yeterince gülümseyip gülümsemediğini kontrol eder."""
-        return self.get_smile_score(frame) > threshold
+    def get_smile_score(self, frame):
+        """Eski kodlarla uyumluluk için."""
+        return self.get_face_data(frame)['smile']
