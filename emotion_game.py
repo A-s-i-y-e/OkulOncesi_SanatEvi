@@ -1,30 +1,12 @@
 """
 emotion_game.py
-Duygu Aynası Oyunu - Başarı anında uçuşan yıldız efektli sürüm.
+Duygu Aynası Oyunu - Sade ve hızlı geçişli sürüm.
 """
 
 import cv2
 import time
-import random
 import numpy as np
 from ui_engine import draw_neon_text, draw_glass_panel
-
-class StarParticle:
-    def __init__(self, x, y, color):
-        self.x = x
-        self.y = y
-        self.color = color
-        self.vx = random.uniform(-10, 10)
-        self.vy = random.uniform(-15, -5)
-        self.life = 1.0 # 1.0 -> 0.0
-        self.size = random.randint(15, 25)
-
-    def update(self):
-        self.x += self.vx
-        self.y += self.vy
-        self.vy += 0.5 # Yerçekimi
-        self.life -= 0.02
-        return self.life > 0
 
 class EmotionGame:
     def __init__(self, w, h):
@@ -45,7 +27,6 @@ class EmotionGame:
         self.is_success = False
         self.success_time = 0
         self.pulse = 0.0
-        self.particles = [] # Uçuşan yıldızlar
 
     def trigger_success(self):
         if not self.is_success:
@@ -53,15 +34,11 @@ class EmotionGame:
             self.success_time = time.time()
             self.score += 20
             self.pulse = 1.0
-            # Başarı anında yıldızları oluştur
-            level_color = self.levels[self.current_level_idx]['color']
-            for _ in range(30): # 30 adet yıldız
-                self.particles.append(StarParticle(self.w//2, self.h//2, level_color))
 
     def update(self, face_data):
         if self.is_success:
             self.pulse = min(1.6, self.pulse + 0.08)
-            if time.time() - self.success_time > 2.5:
+            if time.time() - self.success_time > 1.5:
                 self.next_level()
         else:
             level = self.levels[self.current_level_idx]
@@ -72,14 +49,10 @@ class EmotionGame:
                 if face_data.get(level['target'], 0) > level['threshold']:
                     self.trigger_success()
 
-        # Partikülleri güncelle
-        self.particles = [p for p in self.particles if p.update()]
-
     def next_level(self):
         self.current_level_idx = (self.current_level_idx + 1) % len(self.levels)
         self.is_success = False
         self.pulse = 0.0
-        self.particles = []
 
     def draw_target_emoji(self, img, level_name, x, y, size, color):
         cx, cy = x, y
@@ -114,33 +87,23 @@ class EmotionGame:
 
     def draw(self, img, face_data):
         level = self.levels[self.current_level_idx]
-        
         overlay = img.copy()
         cv2.rectangle(overlay, (0, 0), (self.w, self.h), (15, 10, 25), -1)
         cv2.addWeighted(overlay, 0.4, img, 0.6, 0, img)
         
-        # 1. Puan ve Seviye
         draw_glass_panel(img, 40, 20, 250, 70, 15, color=level['color'], alpha=0.3)
-        cv2.putText(img, f"PUAN: {self.score}", (60, 50), cv2.FONT_HERSHEY_DUPLEX, 0.7, (255, 255, 255), 2)
+        cv2.putText(img, f"YILDIZ: {self.score}", (60, 55), cv2.FONT_HERSHEY_DUPLEX, 0.7, (255, 255, 255), 2)
         cv2.putText(img, f"SEVIYE: {self.current_level_idx + 1}/{len(self.levels)}", (60, 80), cv2.FONT_HERSHEY_DUPLEX, 0.5, (200, 200, 200), 1)
         
-        # 2. Partikülleri Çiz (Uçuşan Yıldızlar)
-        for p in self.particles:
-            s = int(p.size * p.life)
-            if s > 0:
-                # Yıldız yerine küçük parlayan kareler/artılar (çizimi kolay ve şık)
-                cv2.rectangle(img, (int(p.x - s), int(p.y - s)), (int(p.x + s), int(p.y + s)), p.color, -1)
-                # Küçük bir ışık süzmesi
-                cv2.circle(img, (int(p.x), int(p.y)), s+5, p.color, 1, cv2.LINE_AA)
-        
-        # 3. MERKEZİ EMOJİ
         scale = 1.0 + (self.pulse * 0.3)
         target_size = int(120 * scale)
         current_color = level['color'] if self.is_success else tuple(int((c+255)/2) for c in level['color'])
         self.draw_target_emoji(img, level['name'], self.w//2, self.h//2, target_size, current_color)
         
-        # 4. Cıkıs
+        if self.is_success:
+            draw_neon_text(img, "HARIKASIN!", self.w//2 - 100, self.h//2 + 220, cv2.FONT_HERSHEY_DUPLEX, 1.2, level['color'], 3)
+
         cv2.rectangle(img, (self.w - 180, 20), (self.w - 20, 70), (50, 50, 200), -1)
-        cv2.putText(img, "CIKIS [M]", (self.w - 165, 55), cv2.FONT_HERSHEY_DUPLEX, 0.7, (255, 255, 255), 2)
+        cv2.putText(img, "MENÜ [M]", (self.w - 165, 55), cv2.FONT_HERSHEY_DUPLEX, 0.7, (255, 255, 255), 2)
 
         return img
