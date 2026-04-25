@@ -38,7 +38,10 @@
 ## 3. Sistem Mimarisi ve Teknik Tasarım
 
 ### 3.1. Genel Mimari
-Uygulama **Modüler Katmanlı Mimari** kullanılarak geliştirilmiştir:
+Uygulama, **Modüler Katmanlı Mimari** kullanılarak geliştirilmiştir. Ayrıca bileşenler arasındaki etkileşimi yönetmek için **MVC (Model-View-Controller)** tasarım desenini takip eder:
+*   **Model:** El koordinatları, şablon verileri ve çizim tuvali.
+*   **View:** OpenCV ve Neon Efekt Motoru ile sunulan kullanıcı arayüzü.
+*   **Controller:** `main.py` ve jest algılama mantığıyla sağlanan kontrol mekanizması.
 
 | Katman | Sorumluluk | İlgili Dosya |
 | :--- | :--- | :--- |
