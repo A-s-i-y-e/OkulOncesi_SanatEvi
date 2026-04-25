@@ -58,12 +58,13 @@ Uygulama **Katmanlı Mimari (Layered Architecture)** prensiplerini takip eder:
 
 #### 4.1.2. Özellik: Sihirli Şablon Boyama
 **Açıklama:** Ekranda beliren hazır şablonların (Araba, Ayı vb.) üzerine gelip parmağıyla dokunan çocuk, o alanı taşırmadan otomatik olarak boyar. Bu özellik çocukların başarı hissini artırır.
+![Gerçek Ayı Şablonu Boyama Anı](images/gercek_sablon_aksiyon.png)
 
-![Gerçek Balon Patlatma Oyunu](images/gercek_balon_oyunu.png)
+![Gerçek Balon Patlatma Aksiyonu](images/gercek_balon_aksiyon.png)
 
 #### 4.1.3. Özellik: Eğitici Oyunlar (Balon Patlatma ve Elma Yakala)
 **Açıklama:** El koordinasyonunu geliştirmek için ekrandaki balonları parmakla dokunarak patlatma ve vücut hareketleriyle düşen elmaları toplama oyunlarıdır.
-![Gerçek Elma Yakalama (Pose Game)](images/gercek_pose_game.png)
+![Gerçek Elma Yakalama (Pose Game) Aksiyonu](images/gercek_pose_aksiyon.png)
 
 ---
 
