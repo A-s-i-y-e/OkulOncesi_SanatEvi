@@ -89,6 +89,10 @@ Uygulama, MediaPipe Face Landmarker teknolojisini kullanarak çocuğun yüzünde
 *   **Gülümseme Kilidi:** Giriş yapmak için "mutluluk" skoru hesaplanır. Çocuk gülümsediğinde ekrandaki ilerleme halkası dolar ve uygulama güvenli bir şekilde açılır.
 ![Yüz Taklit ve Gülümseme Arayüzü](images/gercek_smile_entry.png)
 
+#### 4.1.5. Özellik: Duygu Aynası Eğitici Oyunu
+Çocukların duygusal farkındalıklarını artırmak amacıyla geliştirilen bu modda, uygulama çocuktan belirli yüz ifadelerini (Mutlu, Şaşkın, Göz Kırpma vb.) yapmasını ister. AI, bu ifadeleri gerçek zamanlı analiz ederek başarı durumuna göre puan verir.
+![Duygu Aynası Oyun Arayüzü](images/gercek_duygu_aynasi.png)
+
 ---
 
 ## 5. Kod Kalitesi ve Yazılım Geliştirme Pratikleri
