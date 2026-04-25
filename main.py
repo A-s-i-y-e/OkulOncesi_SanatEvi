@@ -269,6 +269,29 @@ def main():
                     break
 
         elif current_state in ['draw', 'template']:
+            # Geri donus butonu (Ev ikonu)
+            if 'icon_home' in locals() and icon_home is not None:
+                bx, by = w - 80, 20
+                draw_glass_panel(frame, bx-5, by-5, 60, 60, 10, color=(100, 100, 255), alpha=0.3)
+                frame[by:by+50, bx:bx+50] = cv2.max(frame[by:by+50, bx:bx+50], icon_home)
+
+            # --- Navigasyon Kontrolleri (Ikonlarla) ---
+            for tip in index_tips:
+                tx, ty = tip
+                # Menuye don (Ev ikonu)
+                if w - 80 <= tx <= w - 20 and 20 <= ty <= 80:
+                    current_state = 'menu'
+                    time.sleep(0.5); break
+                
+                # Renk Ileri/Geri (Ok ikonları)
+                if 25 <= ty <= 65:
+                    if 10 <= tx <= 50: # Geri Oku
+                        ui.prev_color()
+                        time.sleep(0.3); break
+                    if 630 <= tx <= 670: # Ileri Oku
+                        ui.next_color()
+                        time.sleep(0.3); break
+
             # --- Araç/Renk Seçimi (El Jesti ile) ---
             if stable_gesture == 'erase' and ui.active_tool != 'erase':
                 ui.set_tool('erase')

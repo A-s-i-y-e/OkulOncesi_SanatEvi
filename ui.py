@@ -79,6 +79,19 @@ class DrawingUI:
             else:
                 cv2.circle(frame, (cx, cy), 20, c, -1, cv2.LINE_AA)
 
+        # --- İLERİ / GERİ OKLARI ---
+        if self.icon_prev is not None:
+            # Geri Oku (Sol)
+            bx, by = 10, 25
+            draw_glass_panel(frame, bx, by, 40, 40, 10, color=(255, 100, 255), alpha=0.3)
+            frame[by+5:by+45, bx:bx+40] = cv2.max(frame[by+5:by+45, bx:bx+40], self.icon_prev[:, :40])
+            
+        if self.icon_next is not None:
+            # Ileri Oku (Sag)
+            bx, by = 630, 25
+            draw_glass_panel(frame, bx, by, 40, 40, 10, color=(100, 255, 100), alpha=0.3)
+            frame[by+5:by+45, bx:bx+40] = cv2.max(frame[by+5:by+45, bx:bx+40], self.icon_next[:, :40])
+
         # 3. Sol Araç Çubuğu
         toolbar_h = len(self.tools) * 90 + 100
         draw_glass_panel(frame, 20, 100, 100, toolbar_h, 20, color=(50, 50, 150), alpha=0.2)
