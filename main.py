@@ -239,9 +239,13 @@ def main():
                 draw_glass_panel(frame, bx-10, by-10, 100, 100, 15, color=(100, 100, 255), alpha=0.3)
                 frame[by:by+80, bx:bx+80] = cv2.max(frame[by:by+80, bx:bx+80], icon_home)
             
-            for tip in index_tips:
-                tx, ty = tip
-                if w - 180 <= tx <= w and h - 180 <= ty <= h:
+            # Hibrit Kontrol: Burun veya Parmak ucuyla tetikle
+            trigger_pts = []
+            if nose_pos: trigger_pts.append(nose_pos)
+            for tip in index_tips: trigger_pts.append(tip)
+            
+            for p in trigger_pts:
+                if w - 180 <= p[0] <= w and h - 180 <= p[1] <= h:
                     current_state = 'menu'
                     time.sleep(0.5); break
 
@@ -289,9 +293,13 @@ def main():
                 draw_glass_panel(frame, bx-10, by-10, 100, 100, 15, color=(100, 100, 255), alpha=0.3)
                 frame[by:by+80, bx:bx+80] = cv2.max(frame[by:by+80, bx:bx+80], icon_home)
 
-            for tip in index_tips:
-                tx, ty = tip
-                if w - 180 <= tx <= w and h - 180 <= ty <= h:
+            # Hibrit Kontrol: Burun veya Parmak ucuyla tetikle
+            trigger_pts = []
+            if nose_pos: trigger_pts.append(nose_pos)
+            for tip in index_tips: trigger_pts.append(tip)
+            
+            for p in trigger_pts:
+                if w - 180 <= p[0] <= w and h - 180 <= p[1] <= h:
                     current_state = 'menu'
                     time.sleep(0.5); break
 
@@ -302,11 +310,14 @@ def main():
                 draw_glass_panel(frame, bx-10, by-10, 100, 100, 15, color=(100, 100, 255), alpha=0.3)
                 frame[by:by+80, bx:bx+80] = cv2.max(frame[by:by+80, bx:bx+80], icon_home)
 
-            # --- Navigasyon Kontrolleri (Ikonlarla) ---
-            for tip in index_tips:
-                tx, ty = tip
+            # --- Navigasyon Kontrolleri (Hibrit: Burun veya Parmak) ---
+            trigger_pts = []
+            if nose_pos: trigger_pts.append(nose_pos)
+            for tip in index_tips: trigger_pts.append(tip)
+            
+            for p in trigger_pts:
                 # Menuye don (Ev ikonu - SAĞ ALT)
-                if w - 180 <= tx <= w and h - 180 <= ty <= h:
+                if w - 180 <= p[0] <= w and h - 180 <= p[1] <= h:
                     current_state = 'menu'
                     time.sleep(0.5); break
                 
