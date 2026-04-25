@@ -97,6 +97,17 @@ class EmotionGame:
         cv2.rectangle(overlay, (0, 0), (self.w, self.h), (15, 10, 25), -1)
         cv2.addWeighted(overlay, 0.4, img, 0.6, 0, img)
         
+        # --- LOGO VE BASLIK (Üst Orta) ---
+        lx, ly = self.w // 2 - 180, 35
+        cv2.circle(img, (lx, ly), 10, (255, 255, 255), -1, cv2.LINE_AA)
+        finger_colors = [(0,0,255), (0,255,255), (0,255,0), (255,0,0), (255,0,255)]
+        for i, color in enumerate(finger_colors):
+            angle = -160 + i * 40
+            rad = np.deg2rad(angle)
+            fx, fy = int(lx + np.cos(rad) * 18), int(ly + np.sin(rad) * 18)
+            cv2.line(img, (lx, ly), (fx, fy), color, 4, cv2.LINE_AA)
+        draw_neon_text(img, "MINIK ELLER ATOLYESI", self.w // 2 - 155, 45, cv2.FONT_HERSHEY_DUPLEX, 0.6, (255, 100, 255), 1)
+
         # 1. Puan Paneli (Sadece Yıldız İkonu ve Rakam)
         draw_glass_panel(img, 40, 20, 180, 60, 15, color=level['color'], alpha=0.3)
         if self.icon_star is not None:

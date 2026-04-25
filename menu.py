@@ -55,7 +55,17 @@ class MainMenu:
         frame[:] = cv2.addWeighted(blurred_bg, 0.4, black_overlay, 0.6, 0)
         self.particles.update_and_draw(frame)
 
-        draw_neon_text(frame, "MINIK ELLER ATOLYESI", self.w // 2 - 380, 100, cv2.FONT_HERSHEY_DUPLEX, 1.8, (255, 100, 200), thickness_base=3)
+        # --- LOGO VE BASLIK ---
+        lx, ly = self.w // 2 - 250, 60
+        cv2.circle(frame, (lx, ly), 20, (255, 255, 255), -1, cv2.LINE_AA)
+        finger_colors = [(0,0,255), (0,255,255), (0,255,0), (255,0,0), (255,0,255)]
+        for i, color in enumerate(finger_colors):
+            angle = -160 + i * 40
+            rad = np.deg2rad(angle)
+            fx, fy = int(lx + np.cos(rad) * 35), int(ly + np.sin(rad) * 35)
+            cv2.line(frame, (lx, ly), (fx, fy), color, 8, cv2.LINE_AA)
+            
+        draw_neon_text(frame, "MINIK ELLER ATOLYESI", self.w // 2 - 200, 80, cv2.FONT_HERSHEY_DUPLEX, 1.4, (255, 100, 200), thickness_base=3)
 
         selected_btn = None
         
