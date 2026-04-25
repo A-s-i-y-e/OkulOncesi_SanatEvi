@@ -31,7 +31,7 @@ class MainMenu:
             if os.path.exists(fname):
                 img = cv2.imread(fname)
                 if img is not None:
-                    self.icons[key] = cv2.resize(img, (160, 160)) # Boyutu biraz küçülttük (Güvenli alan)
+                    self.icons[key] = cv2.resize(img, (160, 160))
             else:
                 self.icons[key] = None
 
@@ -40,22 +40,8 @@ class MainMenu:
             'template': {'row': 0, 'col': 1, 'color': (255, 180, 50), 'hover_anim': 0.0, 'progress': 0.0},
             'game': {'row': 1, 'col': 0, 'color': (255, 120, 100), 'hover_anim': 0.0, 'progress': 0.0},
             'pose_game': {'row': 1, 'col': 1, 'color': (100, 255, 100), 'hover_anim': 0.0, 'progress': 0.0},
-            'emotion_game': {
-                'row': 2, 'col': 0,
-                'color': (255, 255, 100),
-                'text': 'DUYGU AYNASI',
-                'icon_type': 'smiley',
-                'hover_anim': 0.0,
-                'progress': 0.0
-            },
-            'quit': {
-                'row': 2, 'col': 1,
-                'color': (50, 50, 255), # Kırmızımsı (BGR)
-                'text': 'KAPAT',
-                'icon_type': 'power',
-                'hover_anim': 0.0,
-                'progress': 0.0
-            }
+            'emotion_game': {'row': 2, 'col': 0, 'color': (255, 255, 100), 'hover_anim': 0.0, 'progress': 0.0},
+            'quit': {'row': 2, 'col': 1, 'color': (50, 50, 255), 'hover_anim': 0.0, 'progress': 0.0}
         }
         self.last_time = time.time()
 
@@ -79,7 +65,6 @@ class MainMenu:
             rad = np.deg2rad(angle)
             fx, fy = int(lx + np.cos(rad) * 35), int(ly + np.sin(rad) * 35)
             cv2.line(frame, (lx, ly), (fx, fy), color, 8, cv2.LINE_AA)
-            
         draw_neon_text(frame, "MINIK ELLER ATOLYESI", self.w // 2 - 200, 80, cv2.FONT_HERSHEY_DUPLEX, 1.4, (255, 100, 200), thickness_base=3)
 
         selected_btn = None
@@ -107,17 +92,21 @@ class MainMenu:
 
             draw_glass_panel(frame, cbx, cby, cbw, cbh, r=30, color=info['color'], alpha=0.1 + anim*0.1)
             
-            # --- İKONU ÇİZ ---
+            # --- GÜVENLİ İKON ÇİZİMİ ---
+            isize = 160
+            ix, iy = cbx + (cbw - isize)//2, cby + (cbh - isize)//2
+            
             icon = self.icons.get(key)
             if icon is not None:
-                # İkonu merkeze yerleştir
-                ix, iy = cbx + (cbw - 200)//2, cby + (cbh - 200)//2
-                roi = frame[iy:iy+200, ix:ix+200]
-                icon_colored = cv2.addWeighted(icon, 1.0, np.zeros_like(icon), 0, 0)
-                frame[iy:iy+200, ix:ix+200] = cv2.max(roi, icon_colored)
+                # Resim dosyasından çizim
+                x1, y1 = max(0, ix), max(0, iy)
+                x2, y2 = min(self.w, ix + isize), min(self.h, iy + isize)
+                if x2 > x1 and y2 > y1:
+                    icon_part = icon[(y1-iy):(y2-iy), (x1-ix):(x2-ix)]
+                    roi = frame[y1:y2, x1:x2]
+                    frame[y1:y2, x1:x2] = cv2.max(roi, icon_part)
             elif key == 'quit':
-                # Eğer ikon yoksa (Kapat için) elden çiz
-                isize = 100
+                # Elden çizim (GÜVENLİ)
                 cx, cy = cbx + cbw // 2, cby + cbh // 2
                 cv2.circle(frame, (cx, cy), 40, info['color'], 5, cv2.LINE_AA)
                 cv2.line(frame, (cx, cy-40), (cx, cy), info['color'], 8, cv2.LINE_AA)

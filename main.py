@@ -113,7 +113,7 @@ def main():
 
     # İkonları yükle (Küçük yardımcı ikonlar)
     icon_home = cv2.imread('icon_home.png')
-    if icon_home is not None: icon_home = cv2.resize(icon_home, (50, 50))
+    if icon_home is not None: icon_home = cv2.resize(icon_home, (80, 80)) # Buyutuldu
     
     cv2.namedWindow(WINDOW_TITLE, cv2.WINDOW_NORMAL)
     cv2.resizeWindow(WINDOW_TITLE, w, h)
@@ -233,18 +233,17 @@ def main():
                 cv2.line(frame, (lx, ly), (fx, fy), color, 4, cv2.LINE_AA)
             draw_neon_text(frame, "MINIK ELLER ATOLYESI", w // 2 - 155, 45, cv2.FONT_HERSHEY_DUPLEX, 0.6, (255, 100, 255), 1)
             
-            # Geri donus butonu (Ev ikonu)
+            # Geri donus butonu (Ev ikonu - SAĞ ALT)
             if 'icon_home' in locals() and icon_home is not None:
-                bx, by = w - 80, 20
-                draw_glass_panel(frame, bx-5, by-5, 60, 60, 10, color=(100, 100, 255), alpha=0.3)
-                frame[by:by+50, bx:bx+50] = cv2.max(frame[by:by+50, bx:bx+50], icon_home)
+                bx, by = w - 100, h - 100
+                draw_glass_panel(frame, bx-10, by-10, 100, 100, 15, color=(100, 100, 255), alpha=0.3)
+                frame[by:by+80, bx:bx+80] = cv2.max(frame[by:by+80, bx:bx+80], icon_home)
             
             for tip in index_tips:
                 tx, ty = tip
-                if w - 80 <= tx <= w - 20 and 20 <= ty <= 80:
+                if w - 100 <= tx <= w - 20 and h - 100 <= ty <= h - 20:
                     current_state = 'menu'
-                    time.sleep(0.5)
-                    break
+                    time.sleep(0.5); break
 
         elif current_state == 'pose_game':
             if 'pose_game_inst' in locals() and pose_game_inst:
@@ -261,52 +260,52 @@ def main():
                 cv2.line(frame, (lx, ly), (fx, fy), color, 4, cv2.LINE_AA)
             draw_neon_text(frame, "MINIK ELLER ATOLYESI", w // 2 - 155, 45, cv2.FONT_HERSHEY_DUPLEX, 0.6, (255, 100, 255), 1)
 
-            # Geri donus butonu (Ev ikonu)
+            # Geri donus butonu (Ev ikonu - SAĞ ALT)
             if 'icon_home' in locals() and icon_home is not None:
-                bx, by = w - 80, 20
-                draw_glass_panel(frame, bx-5, by-5, 60, 60, 10, color=(100, 100, 255), alpha=0.3)
-                frame[by:by+50, bx:bx+50] = cv2.max(frame[by:by+50, bx:bx+50], icon_home)
+                bx, by = w - 100, h - 100
+                draw_glass_panel(frame, bx-10, by-10, 100, 100, 15, color=(100, 100, 255), alpha=0.3)
+                frame[by:by+80, bx:bx+80] = cv2.max(frame[by:by+80, bx:bx+80], icon_home)
 
-            for tip in index_tips:
-                tx, ty = tip
-                if w - 80 <= tx <= w - 20 and 20 <= ty <= 80:
+            # Burun veya Parmak ucuyla tetikle
+            trigger_points = []
+            if nose_pos: trigger_points.append(nose_pos)
+            for tip in index_tips: trigger_points.append(tip)
+
+            for p in trigger_points:
+                if w - 100 <= p[0] <= w - 20 and h - 100 <= p[1] <= h - 20:
                     current_state = 'menu'
-                    time.sleep(0.5)
-                    break
+                    time.sleep(0.5); break
 
         elif current_state == 'emotion_game':
             if 'emotion_game_inst' in locals():
-                # Yüz verilerini al ve oyuna aktar
                 face_data = face_detector.get_face_data(frame)
                 emotion_game_inst.update(face_data)
                 frame = emotion_game_inst.draw(frame, face_data)
                 
-            # Geri donus butonu (Ev ikonu)
+            # Geri donus butonu (Ev ikonu - SAĞ ALT)
             if 'icon_home' in locals() and icon_home is not None:
-                bx, by = w - 80, 20
-                draw_glass_panel(frame, bx-5, by-5, 60, 60, 10, color=(100, 100, 255), alpha=0.3)
-                frame[by:by+50, bx:bx+50] = cv2.max(frame[by:by+50, bx:bx+50], icon_home)
+                bx, by = w - 100, h - 100
+                draw_glass_panel(frame, bx-10, by-10, 100, 100, 15, color=(100, 100, 255), alpha=0.3)
+                frame[by:by+80, bx:bx+80] = cv2.max(frame[by:by+80, bx:bx+80], icon_home)
 
-            # Geri donus butonu kontrolü
             for tip in index_tips:
                 tx, ty = tip
-                if w - 80 <= tx <= w - 20 and 20 <= ty <= 80:
+                if w - 100 <= tx <= w - 20 and h - 100 <= ty <= h - 20:
                     current_state = 'menu'
-                    time.sleep(0.5)
-                    break
+                    time.sleep(0.5); break
 
         elif current_state in ['draw', 'template']:
-            # Geri donus butonu (Ev ikonu)
+            # Geri donus butonu (Ev ikonu - SAĞ ALT)
             if 'icon_home' in locals() and icon_home is not None:
-                bx, by = w - 80, 20
-                draw_glass_panel(frame, bx-5, by-5, 60, 60, 10, color=(100, 100, 255), alpha=0.3)
-                frame[by:by+50, bx:bx+50] = cv2.max(frame[by:by+50, bx:bx+50], icon_home)
+                bx, by = w - 100, h - 100
+                draw_glass_panel(frame, bx-10, by-10, 100, 100, 15, color=(100, 100, 255), alpha=0.3)
+                frame[by:by+80, bx:bx+80] = cv2.max(frame[by:by+80, bx:bx+80], icon_home)
 
             # --- Navigasyon Kontrolleri (Ikonlarla) ---
             for tip in index_tips:
                 tx, ty = tip
-                # Menuye don (Ev ikonu)
-                if w - 80 <= tx <= w - 20 and 20 <= ty <= 80:
+                # Menuye don (Ev ikonu - SAĞ ALT)
+                if w - 100 <= tx <= w - 20 and h - 100 <= ty <= h - 20:
                     current_state = 'menu'
                     time.sleep(0.5); break
                 
