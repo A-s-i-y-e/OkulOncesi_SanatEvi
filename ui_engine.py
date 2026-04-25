@@ -151,7 +151,7 @@ def draw_art_frame(canvas_img, artist_name="Minik Sanatci"):
     
     return framed
 
-def draw_login_screen(img, smile_score, now):
+def draw_login_screen(img, smile_score, smile_progress, now):
     h, w = img.shape[:2]
     
     # Koyu, şık ve yumuşak bir arkaplan
@@ -163,27 +163,33 @@ def draw_login_screen(img, smile_score, now):
     cx, cy = w // 2, h // 2
     r = 150
     
-    # Gülümseme miktarına göre rengi ve parlaklığı belirle
-    # 0.0 (beyaz/şeffaf) -> 1.0 (parlak yeşil/altın)
+    # Gülümseme miktarına göre rengi belirle
+    # smile_progress 0.0 -> 1.0 arası gelir
     glow_color = (
-        int(100 + smile_score * 155), # R
-        int(255),                    # G
-        int(100 + smile_score * 155)  # B
+        int(150 - smile_progress * 50), # R
+        int(150 + smile_progress * 105), # G
+        int(255)                        # B (Sarımsıdan Maviye geçiş gibi veya sabit neon)
     )
-    alpha = 0.3 + (smile_score * 0.4)
     
-    # 1. Ana Kafa (Dış Çerçeve)
+    # 1. İlerleme Halkası (Progress Ring)
+    # smile_progress arttıkça halkanın açısı artar
+    angle = int(smile_progress * 360)
+    cv2.ellipse(img, (cx, cy), (r + 20, r + 20), -90, 0, angle, glow_color, 8, cv2.LINE_AA)
+    # Halkanın dışına ince bir kılavuz çizgi
+    cv2.circle(img, (cx, cy), r + 20, (100, 100, 100), 1, cv2.LINE_AA)
+    
+    # 2. Ana Kafa (Dış Çerçeve)
+    alpha = 0.3 + (smile_score * 0.4)
     overlay_smiley = img.copy()
     cv2.circle(overlay_smiley, (cx, cy), r, glow_color, 4, cv2.LINE_AA)
     
-    # 2. Gözler
+    # 3. Gözler
     eye_offset_x = 50
     eye_offset_y = 40
     cv2.circle(overlay_smiley, (cx - eye_offset_x, cy - eye_offset_y), 15, glow_color, -1, cv2.LINE_AA)
     cv2.circle(overlay_smiley, (cx + eye_offset_x, cy - eye_offset_y), 15, glow_color, -1, cv2.LINE_AA)
     
-    # 3. Ağız (Gülümseme miktarına göre kavislenen yay)
-    # smile_score arttıkça ağız daha çok kavislenir
+    # 4. Ağız
     smile_depth = int(20 + smile_score * 60)
     axes = (80, smile_depth)
     cv2.ellipse(overlay_smiley, (cx, cy + 30), axes, 0, 0, 180, glow_color, 6, cv2.LINE_AA)
@@ -191,8 +197,5 @@ def draw_login_screen(img, smile_score, now):
     # Katmanı ana resme bindir
     cv2.addWeighted(overlay_smiley, alpha, img, 1 - alpha, 0, img)
     
-    # Giriş tetikleme eşiği
-    if smile_score > 0.45:
-        return True
-    
-    return False
+    # Eğer %100 dolduysa True dön
+    return smile_progress >= 1.0

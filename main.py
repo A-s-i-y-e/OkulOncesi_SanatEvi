@@ -107,6 +107,7 @@ def main():
     last_color_gesture_time = 0.0   
     COLOR_CHANGE_COOLDOWN = 1.2     
     last_magic_toggle_time = 0.0
+    smile_progress = 0.0  # Gülümseme doluluk oranı (0.0 - 1.0)
 
     cv2.namedWindow(WINDOW_TITLE, cv2.WINDOW_NORMAL)
     cv2.resizeWindow(WINDOW_TITLE, w, h)
@@ -166,11 +167,21 @@ def main():
 
         if current_state == 'login':
             smile_score = face_detector.get_smile_score(frame)
-            should_enter = draw_login_screen(frame, smile_score, now)
+            
+            # Gülümseme eşiği üzerindeyse barı doldur, değilse boşalt
+            if smile_score > 0.40:
+                smile_progress += 0.04 # Dolma hızı
+            else:
+                smile_progress -= 0.02 # Boşalma hızı (daha yavaş)
+                
+            smile_progress = max(0.0, min(1.0, smile_progress))
+            
+            should_enter = draw_login_screen(frame, smile_score, smile_progress, now)
             
             if should_enter:
                 current_state = 'menu'
                 time.sleep(0.8) # Başarı hissi için biraz bekle
+                smile_progress = 0.0 # Sıfırla
 
         elif current_state == 'menu':
             # Menü Ekranı İşlemleri

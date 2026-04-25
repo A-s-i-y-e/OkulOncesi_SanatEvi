@@ -78,6 +78,17 @@ class FaceDetector:
             pass
         return 0.0
 
+    def is_face_present(self, frame):
+        """Ekranda en az bir yüz olup olmadığını döndürür."""
+        if self.detector is None: return False
+        try:
+            rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb_frame)
+            result = self.detector.detect(mp_image)
+            return len(result.face_landmarks) > 0
+        except:
+            return False
+
     def is_smiling(self, frame, threshold=0.45):
         """Kullanıcının yeterince gülümseyip gülümsemediğini kontrol eder."""
         return self.get_smile_score(frame) > threshold
