@@ -133,13 +133,11 @@ def main():
         frame = cv2.flip(frame, 1)  # Ayna görüntüsü
         frame = cv2.resize(frame, (w, h)) # Kameradan ne gelirse gelsin UI için 1280x720 yap
 
-        # --- Yüz Tanıma ve Karşılama (Face Login Simulation) ---
-        if face_detector.is_face_present(frame):
-            # Ekranın en üstünde neon karşılama mesajı
+        # --- Yüz Tanıma ve Karşılama (Face Greeting) ---
+        if current_state != 'login' and face_detector.is_face_present(frame):
+            # Ekranın en üstünde neon karşılama mesajı (Sadece menü ve çizimdeyken)
             welcome_msg = "HOS GELDIN KUCUK RESSAM! "
             draw_neon_text(frame, welcome_msg, 450, 40, cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 100, 255), 2)
-            # Küçük bir yıldız ikonu ekleyelim
-            cv2.putText(frame, " ", (810, 40), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 2)
 
         # --- El Algılama / Pose Algılama ---
         if current_state == 'pose_game':
@@ -167,16 +165,12 @@ def main():
         # --- STATE MACHINE (DURUM YÖNETİMİ) ---
 
         if current_state == 'login':
-            face_here = face_detector.is_face_present(frame)
-            btn_coords = draw_login_screen(frame, face_here, now)
+            smile_score = face_detector.get_smile_score(frame)
+            should_enter = draw_login_screen(frame, smile_score, now)
             
-            if btn_coords and index_tips:
-                bx, by, bw, bh = btn_coords
-                for tip in index_tips:
-                    if bx <= tip[0] <= bx + bw and by <= tip[1] <= by + bh:
-                        current_state = 'menu'
-                        time.sleep(0.5)
-                        break
+            if should_enter:
+                current_state = 'menu'
+                time.sleep(0.8) # Başarı hissi için biraz bekle
 
         elif current_state == 'menu':
             # Menü Ekranı İşlemleri

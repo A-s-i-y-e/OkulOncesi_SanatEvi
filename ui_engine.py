@@ -151,36 +151,48 @@ def draw_art_frame(canvas_img, artist_name="Minik Sanatci"):
     
     return framed
 
-def draw_login_screen(img, face_present, now):
+def draw_login_screen(img, smile_score, now):
     h, w = img.shape[:2]
     
-    # Koyu, şık bir arkaplan katmanı (hafif karartma)
+    # Koyu, şık ve yumuşak bir arkaplan
     overlay = img.copy()
-    cv2.rectangle(overlay, (0, 0), (w, h), (30, 10, 10), -1)
+    cv2.rectangle(overlay, (0, 0), (w, h), (40, 20, 30), -1)
     cv2.addWeighted(overlay, 0.4, img, 0.6, 0, img)
     
-    # Başlık
-    title = "MINIK ELLER ATOLYESI"
-    draw_neon_text(img, title, w//2 - 280, h//2 - 150, cv2.FONT_HERSHEY_DUPLEX, 1.2, (255, 100, 255), 3)
+    # MERKEZİ GÜLEN YÜZ (SMILEY) ÇİZİMİ
+    cx, cy = w // 2, h // 2
+    r = 150
     
-    if not face_present:
-        # Yüz bekleniyor mesajı
-        msg = "Seni gormek istiyoruz! Kameraya bakar misin? :)"
-        cv2.putText(img, msg, (w//2 - 250, h//2 + 50), cv2.FONT_HERSHEY_DUPLEX, 0.7, (200, 200, 200), 1, cv2.LINE_AA)
-        
-        # Hareketli bir "tarama" çizgisi efekti
-        scan_y = int((now * 150) % h)
-        cv2.line(img, (0, scan_y), (w, scan_y), (255, 100, 255), 1)
-    else:
-        # Yüz bulundu! Başla butonu
-        msg = "Harika! Seni gordum. Hazirsan baslayalim!"
-        draw_neon_text(img, msg, w//2 - 240, h//2, cv2.FONT_HERSHEY_DUPLEX, 0.7, (0, 255, 200), 1)
-        
-        # BAŞLA Butonu (Parlayan)
-        btn_x, btn_y, btn_w, btn_h = w//2 - 100, h//2 + 80, 200, 70
-        draw_glowing_rect(img, btn_x, btn_y, btn_w, btn_h, 20, (0, 255, 200), thickness=3)
-        cv2.putText(img, "BASLA", (btn_x + 55, btn_y + 45), cv2.FONT_HERSHEY_DUPLEX, 1.0, (255, 255, 255), 2)
-        
-        return (btn_x, btn_y, btn_w, btn_h) # Buton koordinatlarını dön
+    # Gülümseme miktarına göre rengi ve parlaklığı belirle
+    # 0.0 (beyaz/şeffaf) -> 1.0 (parlak yeşil/altın)
+    glow_color = (
+        int(100 + smile_score * 155), # R
+        int(255),                    # G
+        int(100 + smile_score * 155)  # B
+    )
+    alpha = 0.3 + (smile_score * 0.4)
     
-    return None
+    # 1. Ana Kafa (Dış Çerçeve)
+    overlay_smiley = img.copy()
+    cv2.circle(overlay_smiley, (cx, cy), r, glow_color, 4, cv2.LINE_AA)
+    
+    # 2. Gözler
+    eye_offset_x = 50
+    eye_offset_y = 40
+    cv2.circle(overlay_smiley, (cx - eye_offset_x, cy - eye_offset_y), 15, glow_color, -1, cv2.LINE_AA)
+    cv2.circle(overlay_smiley, (cx + eye_offset_x, cy - eye_offset_y), 15, glow_color, -1, cv2.LINE_AA)
+    
+    # 3. Ağız (Gülümseme miktarına göre kavislenen yay)
+    # smile_score arttıkça ağız daha çok kavislenir
+    smile_depth = int(20 + smile_score * 60)
+    axes = (80, smile_depth)
+    cv2.ellipse(overlay_smiley, (cx, cy + 30), axes, 0, 0, 180, glow_color, 6, cv2.LINE_AA)
+    
+    # Katmanı ana resme bindir
+    cv2.addWeighted(overlay_smiley, alpha, img, 1 - alpha, 0, img)
+    
+    # Giriş tetikleme eşiği
+    if smile_score > 0.45:
+        return True
+    
+    return False
