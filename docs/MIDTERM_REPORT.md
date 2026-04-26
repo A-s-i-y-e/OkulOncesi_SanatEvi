@@ -53,7 +53,7 @@ Uygulama, **Modüler Katmanlı Mimari** kullanılarak geliştirilmiştir. Ayrıc
 *   **Mantık (Logic) Katmanı:** Tespit edilen koordinatları analiz ederek çizim, silme veya oyun hamlelerine (balon patlatma, elma yakalama, duygu aynası) dönüştürür. (İlgili Dosya: `hand_detector.py`, `game.py`, `pose_game.py`, `emotion_game.py`)
 *   **Arayüz (UI/UX) Katmanı:** OpenCV kullanarak neon görsel efektlerini, parçacık sistemlerini ve oyun arayüzlerini ekrana basar. (İlgili Dosya: `ui_engine.py`, `menu.py`)
 
-![Katmanlı Sistem Mimarisi Şeması (Layered Architecture)](images/katmanli_mimari_semasi_v3_1777135367523.png)
+![Katmanlı Sistem Mimarisi Şeması (Layered Architecture)](images/katmanli_mimari_semasi_v4.png)
 ![Gerçek Ana Menü Arayüzü](images/gercek_menu.png)
 
 ### 3.2. Hibrit Kontrol (Hybrid Control) Veri Akış Diyagramı
